@@ -2,7 +2,6 @@ package com.example.inventory_management_system.controller;
 
 import com.example.inventory_management_system.entity.Product;
 import com.example.inventory_management_system.service.ProductService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/product")
-@CrossOrigin(origins = "http://127.0.0.1:5500")
+@CrossOrigin(origins = "https://sha-ims.netlify.app")
 public class ProductController {
 
     private final ProductService productService;
