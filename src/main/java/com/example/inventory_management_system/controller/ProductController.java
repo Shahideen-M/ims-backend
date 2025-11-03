@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/product")
-@CrossOrigin(origins = "https://sha-ims.netlify.app")
+@CrossOrigin(origins = {"https://sha-ims.netlify.app", "http://127.0.0.1:5500"})
 public class ProductController {
 
     private final ProductService productService;
@@ -41,5 +41,9 @@ public class ProductController {
     @DeleteMapping("/delete/{id}")
     public void deleteById(@PathVariable Long id) {
         productService.deleteProduct(id);
+    }
+    @GetMapping("/ping")
+    public String ping() {
+        return "Server is alive!";
     }
 }
