@@ -1,14 +1,17 @@
-# Use Eclipse Temurin JDK 21
+# Use Eclipse Temurin 21 JDK
 FROM eclipse-temurin:21-jdk
 
 # Set working directory
 WORKDIR /app
 
-# Copy everything (including pom.xml and src)
+# Copy everything (pom.xml, src, mvnw, etc.)
 COPY . .
 
-# Build the JAR inside Docker
-RUN mvn clean package -DskipTests
+# Make mvnw executable
+RUN chmod +x mvnw
+
+# Build the JAR
+RUN ./mvnw clean package -DskipTests
 
 # Expose port
 EXPOSE 10000
