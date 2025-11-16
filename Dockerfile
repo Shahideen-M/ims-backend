@@ -1,20 +1,11 @@
-# Use Eclipse Temurin 21 JDK
 FROM eclipse-temurin:21-jdk
-
-# Set working directory
 WORKDIR /app
 
-# Copy everything (pom.xml, src, mvnw, etc.)
-COPY . .
+# Copy prebuilt JAR
+COPY target/inventory-management-system-0.0.1-SNAPSHOT.jar app.jar
 
-# Make mvnw executable
-RUN chmod +x mvnw
+# Expose Spring Boot port
+EXPOSE 8080
 
-# Build the JAR
-RUN ./mvnw clean package -DskipTests
-
-# Expose port
-EXPOSE 10000
-
-# Run the app
-ENTRYPOINT ["java","-jar","target/inventory-management-system-0.0.1-SNAPSHOT.jar"]
+# Run the JAR
+ENTRYPOINT ["java","-jar","app.jar"]
