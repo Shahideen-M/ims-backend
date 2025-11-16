@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Build the JAR inside Docker
-RUN ./mvnw clean package -DskipTests
+RUN mvn clean package -DskipTests
 
 # Expose port
 EXPOSE 10000
