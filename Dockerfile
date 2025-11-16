@@ -4,11 +4,14 @@ FROM eclipse-temurin:21-jdk
 # Set working directory
 WORKDIR /app
 
-# Copy Maven build output
-COPY target/*.jar app.jar
+# Copy everything (including pom.xml and src)
+COPY . .
 
-# Expose port (Render forwards this automatically)
+# Build the JAR inside Docker
+RUN ./mvnw clean package -DskipTests
+
+# Expose port
 EXPOSE 10000
 
 # Run the app
-ENTRYPOINT ["java","-jar","app.jar"]
+ENTRYPOINT ["java","-jar","target/inventory-management-system-0.0.1-SNAPSHOT.jar"]
