@@ -1,17 +1,23 @@
+# ---- Stage 1: Build the application ----
+FROM maven:3.9.6-eclipse-temurin-21 AS build
+WORKDIR /app
+
+# Copy pom and source
+COPY pom.xml .
+COPY src ./src
+
+# Build JAR
+RUN mvn clean package -DskipTests
+
+# ---- Stage 2: Run the application ----
 FROM eclipse-temurin:21-jdk
 WORKDIR /app
 
-# Copy everything
-COPY . .
+# Copy the JAR from build stage
+COPY --from=build /app/target/*.jar app.jar
 
-# Make mvnw executable
-RUN chmod +x mvnw
-
-# Build the JAR
-RUN ./mvnw clean package -DskipTests
-
-# Expose Spring Boot port
+# Expose port 8080
 EXPOSE 8080
 
-# Run the JAR
-ENTRYPOINT ["java","-jar","target/inventory-management-system-0.0.1-SNAPSHOT.jar"]
+# Run the app
+ENTRYPOINT ["java", "-jar", "app.jar"]
