@@ -9,7 +9,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/product")
-@CrossOrigin(origins = {"https://sha-ims.netlify.app", "http://127.0.0.1:5500"})
 public class ProductController {
 
     private final ProductService productService;
@@ -18,14 +17,14 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PostMapping("/add")
-    public void save(@RequestBody Product product) {
-        productService.saveProduct(product);
+    @PostMapping("/add/{id}")
+    public void save(@PathVariable Long id, @RequestBody Product product) {
+        productService.saveProduct(id, product);
     }
 
-    @GetMapping("/all")
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    @GetMapping("/all/{id}")
+    public List<Product> getAllProducts(@PathVariable Long id) {
+        return productService.getAllProducts(id);
     }
 
     @GetMapping("/{id}")
@@ -33,14 +32,14 @@ public class ProductController {
         return productService.findById(id);
     }
 
-    @PutMapping("/update/{id}")
-    public Product updateProduct(@PathVariable Long id, @RequestBody Product product) {
-        return productService.updateProduct(id, product);
+    @PutMapping("/update/{userId}/{productId}")
+    public Product updateProduct(@PathVariable Long userId, @PathVariable Long productId, @RequestBody Product product) {
+        return productService.updateProduct(userId, productId, product);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void deleteById(@PathVariable Long id) {
-        productService.deleteProduct(id);
+    @DeleteMapping("/delete/{userId}/{productId}")
+    public String deleteById(@PathVariable Long userId, @PathVariable Long productId) {
+        return productService.deleteProduct(userId, productId);
     }
     @GetMapping("/ping")
     public String ping() {
