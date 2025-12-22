@@ -2,6 +2,8 @@ package com.example.inventory_management_system.controller;
 
 import com.example.inventory_management_system.entity.Product;
 import com.example.inventory_management_system.service.ProductService;
+import com.example.inventory_management_system.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,37 +14,52 @@ import java.util.Optional;
 public class ProductController {
 
     private final ProductService productService;
+    private final UserService userService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, UserService userService) {
         this.productService = productService;
+        this.userService = userService;
     }
 
-    @PostMapping("/add/{id}")
-    public void save(@PathVariable Long id, @RequestBody Product product) {
-        productService.saveProduct(id, product);
+    @PostMapping("/{subCategoryId}")
+    public void save(@RequestBody Product product, @PathVariable Long subCategoryId) {
+        Long userId = userService.getLoggedUserId();
+        productService.saveProduct(userId, product, subCategoryId);
     }
 
-    @GetMapping("/all/{id}")
-    public List<Product> getAllProducts(@PathVariable Long id) {
-        return productService.getAllProducts(id);
+    @GetMapping()
+    public List<Product> getAllProducts() {
+        Long userId = userService.getLoggedUserId();
+        return productService.getAllProducts(userId);
     }
 
-    @GetMapping("/{id}")
-    public Optional<Product> getProductById(@PathVariable Long id) {
-        return productService.findById(id);
+    @GetMapping("/{productId}")
+    public Product getProductById(@PathVariable Long productId) {
+        Long userId = userService.getLoggedUserId();
+        return productService.findById(userId, productId);
     }
 
-    @PutMapping("/update/{userId}/{productId}")
-    public Product updateProduct(@PathVariable Long userId, @PathVariable Long productId, @RequestBody Product product) {
+    @GetMapping("/search")
+    public List<Product> searchProducts(@RequestParam String keyword) {
+        Long userId = userService.getLoggedUserId();
+        return productService.searchProducts(keyword, userId);
+    }
+
+    @GetMapping("/dashboard")
+    public ResponseEntity<?> getDashboard() {
+        Long userId = userService.getLoggedUserId();
+        return ResponseEntity.ok(productService.getDashboardData(userId));
+    }
+
+    @PutMapping("/{productId}")
+    public Product updateProduct(@PathVariable Long productId, @RequestBody Product product) {
+        Long userId = userService.getLoggedUserId();
         return productService.updateProduct(userId, productId, product);
     }
 
-    @DeleteMapping("/delete/{userId}/{productId}")
-    public String deleteById(@PathVariable Long userId, @PathVariable Long productId) {
+    @DeleteMapping("/{productId}")
+    public String deleteById(@PathVariable Long productId) {
+        Long userId = userService.getLoggedUserId();
         return productService.deleteProduct(userId, productId);
-    }
-    @GetMapping("/ping")
-    public String ping() {
-        return "Server is alive!";
     }
 }

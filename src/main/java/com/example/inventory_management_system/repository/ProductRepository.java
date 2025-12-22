@@ -11,4 +11,12 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByUserId(Long userId);
     Optional<Product> findByUserIdAndId(Long userId, Long productId);
+    List<Product> findByNameContainingIgnoreCaseAndUserId(String keyword,  Long userId);
+
+    long countByUserId(Long userId);
+
+    long countByUserIdAndQuantityLessThan(Long userId, int qty);
+
+    long countByUserIdAndQuantity(Long userId, int qty);
+
 }

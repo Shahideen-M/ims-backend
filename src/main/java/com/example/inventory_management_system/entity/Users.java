@@ -1,5 +1,7 @@
 package com.example.inventory_management_system.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,6 +18,7 @@ public class Users {
 
     private String username;
     private String email;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     public Users() {}
@@ -28,4 +31,7 @@ public class Users {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Product> products;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Category> category;
 }

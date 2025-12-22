@@ -35,7 +35,7 @@ public class UserController {
         ));
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/me")
     public ResponseEntity<?> deleteMyAccount() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Users user = userService.findByEmail(email);
@@ -58,7 +58,7 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PutMapping("/update")
+    @PutMapping("/me")
     public ResponseEntity<?> updateUser(@RequestBody Users user) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Users existingUser = userService.findByEmail(email);
