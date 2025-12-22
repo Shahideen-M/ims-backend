@@ -62,4 +62,8 @@ public class ProductController {
         Long userId = userService.getLoggedUserId();
         return productService.deleteProduct(userId, productId);
     }
+    @GetMapping("/ping")
+    public String ping() {
+        return "pong";
+    }
 }
