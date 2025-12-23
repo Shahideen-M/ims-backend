@@ -1,9 +1,10 @@
 package com.example.inventory_management_system.service;
 
 import com.example.inventory_management_system.entity.Category;
-import com.example.inventory_management_system.entity.Product;
+import com.example.inventory_management_system.entity.SubCategory;
 import com.example.inventory_management_system.entity.Users;
 import com.example.inventory_management_system.repository.CategoryRepository;
+import com.example.inventory_management_system.repository.SubCategoryRepository;
 import com.example.inventory_management_system.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,17 +16,24 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
+    private final SubCategoryRepository subCategoryRepository;
 
-    public CategoryService(CategoryRepository categoryRepository, UserRepository userRepository) {
+    public CategoryService(CategoryRepository categoryRepository, UserRepository userRepository, SubCategoryRepository subCategoryRepository) {
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
+        this.subCategoryRepository = subCategoryRepository;
     }
 
     public Category saveCategory(Long userId, Category category) {
         Users user = userRepository.findById(userId)
                 .orElseThrow(()-> new RuntimeException("User not found"));
         category.setUser(user);
-        return categoryRepository.save(category);
+        Category savedCategory = categoryRepository.save(category);
+        SubCategory defaultSub = new SubCategory();
+        defaultSub.setName("General");
+        defaultSub.setCategory(savedCategory);
+        subCategoryRepository.save(defaultSub);
+        return savedCategory;
     }
 
     public Category updateCategory(Long userId, Long categoryId, Category category) {
